@@ -1895,6 +1895,53 @@
             "dependsOrder": "sequence",
             "dependsOn": [
             ]
+        },
+        {
+            "label": "download-wic-aarch64",
+            "detail": "hide",
+            "command": "pwsh",
+            "type": "shell",
+            "options": {
+                "cwd": "${env:HOME}/.apollox/scripts"
+            },
+            "args": [
+                "-nop", "-f", "downloadWIC.ps1"
+            ],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "icon": {
+                "id": "cloud-download",
+                "color": "terminal.ansiYellow"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+            ]
+        },
+        {
+            "label": "torizon-emulator-aarch64",
+            "detail": "",
+            "command": "pwsh",
+            "type": "shell",
+            "options": {
+                "cwd": "${env:HOME}/.apollox/scripts"
+            },
+            "args": [
+                "-nop", "-f", "bridge.ps1",
+                "&&",
+                "pwsh", "-nop", "-f", "emulator.ps1"
+            ],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "icon": {
+                "id": "remote-explorer",
+                "color": "terminal.ansiYellow"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "download-wic-aarch64"
+            ]
         }
     ]
 }

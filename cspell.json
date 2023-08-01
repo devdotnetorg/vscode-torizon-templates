@@ -65,7 +65,16 @@
         "ascii",
         "fullname",
         "Devs",
-        "wbem"
+        "wbem",
+        "acpi",
+        "virtio",
+        "unimp",
+        "virt",
+        "qemuarm",
+        "semihosting",
+        "xhci",
+        "hostaddr",
+        "hostbus"
     ],
     "import": [],
     "languageSettings": [
