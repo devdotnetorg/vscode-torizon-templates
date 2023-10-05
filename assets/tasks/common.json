@@ -1902,7 +1902,35 @@
             "command": "pwsh",
             "type": "shell",
             "options": {
-                "cwd": "${env:HOME}/.apollox/scripts"
+                "cwd": "${env:HOME}/.apollox/scripts",
+                "env": {
+                    "ARCH": "aarch64"
+                }
+            },
+            "args": [
+                "-nop", "-f", "downloadWIC.ps1"
+            ],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "icon": {
+                "id": "cloud-download",
+                "color": "terminal.ansiYellow"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+            ]
+        },
+        {
+            "label": "download-wic-x86-64",
+            "detail": "hide",
+            "command": "pwsh",
+            "type": "shell",
+            "options": {
+                "cwd": "${env:HOME}/.apollox/scripts",
+                "env": {
+                    "ARCH": "x86_64"
+                }
             },
             "args": [
                 "-nop", "-f", "downloadWIC.ps1"
@@ -1924,7 +1952,10 @@
             "command": "pwsh",
             "type": "shell",
             "options": {
-                "cwd": "${env:HOME}/.apollox/scripts"
+                "cwd": "${env:HOME}/.apollox/scripts",
+                "env": {
+                    "ARCH": "aarch64"
+                }
             },
             "args": [
                 "-nop", "-f", "bridge.ps1",
@@ -1941,6 +1972,34 @@
             "dependsOrder": "sequence",
             "dependsOn": [
                 "download-wic-aarch64"
+            ]
+        },
+        {
+            "label": "torizon-emulator-x86-64",
+            "detail": "",
+            "command": "pwsh",
+            "type": "shell",
+            "options": {
+                "cwd": "${env:HOME}/.apollox/scripts",
+                "env": {
+                    "ARCH": "x86_64"
+                }
+            },
+            "args": [
+                "-nop", "-f", "bridge.ps1",
+                "&&",
+                "pwsh", "-nop", "-f", "emulator.ps1"
+            ],
+            "problemMatcher": [
+                "$tsc"
+            ],
+            "icon": {
+                "id": "remote-explorer",
+                "color": "terminal.ansiYellow"
+            },
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "download-wic-x86-64"
             ]
         }
     ]

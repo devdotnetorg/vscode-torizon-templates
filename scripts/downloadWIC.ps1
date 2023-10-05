@@ -6,7 +6,17 @@ $PSNativeCommandUseErrorActionPreference = $true
 
 # check if we already have the wic file
 $_HOME = $env:HOME
-$_wicPath = "$_HOME/.torizon/emulator/torizon-core-common-docker-dev-qemuarm64.wic"
+
+if ($env:ARCH -eq "aarch64") {
+    $_wicPath = "$_HOME/.torizon/emulator/torizon-core-common-docker-dev-qemuarm64.wic"
+    $_wicURL = "https://github.com/commontorizon/meta-common-torizon/releases/download/emulator-rc1/aarch64.zip"
+    $_zipFile = "aarch64.zip"
+} elseif ($env:ARCH -eq "x86_64") {
+    $_wicPath = "$_HOME/.torizon/emulator/torizon-core-common-docker-dev-qemux86-64.wic"
+    $_wicURL = "https://github.com/commontorizon/meta-common-torizon/releases/download/emulator-rc2/torizon-core-common-docker-dev-qemux86-64.wic.zip"
+    $_zipFile = "torizon-core-common-docker-dev-qemux86-64.wic.zip"
+}
+
 $_emulatorPath = "$_HOME/.torizon/emulator"
 
 if (Test-Path -Path $_wicPath) {
@@ -17,11 +27,21 @@ if (Test-Path -Path $_wicPath) {
     Write-Host -ForegroundColor Yellow "Checking dependencies ..."
 
     $_packagesToInstall = New-Object Collections.Generic.List[string]
-    $_packages = @(
-        "qemu-system-arm",
-        "qemu-utils",
-        "qemu-system-common"
-    )
+
+    if ($env:ARCH -eq "aarch64") {
+        $_packages = @(
+            "qemu-system-arm",
+            "qemu-utils",
+            "qemu-system-common"
+        )
+    } elseif ($env:ARCH -eq "x86_64") {
+        $_packages = @(
+            "qemu-system-x86",
+            "qemu-utils",
+            "qemu-system-common",
+            "ovmf"
+        )
+    }
 
     foreach ($package in $_packages) {
         dpkg -s $package > /dev/null 2>&1
@@ -52,17 +72,17 @@ if (Test-Path -Path $_wicPath) {
 
     # download the .zip file
     Invoke-WebRequest `
-        -Uri "https://github.com/commontorizon/meta-common-torizon/releases/download/emulator-rc1/aarch64.zip" `
-        -OutFile "aarch64.zip"
+        -Uri $_wicURL `
+        -OutFile $_zipFile
 
     # unzip the .zip file
     Expand-Archive `
-        -Path "aarch64.zip" `
+        -Path $_zipFile `
         -DestinationPath $_emulatorPath
 
     # remove the .zip file
     Remove-Item `
-        -Path "aarch64.zip"
+        -Path $_zipFile
 
     Write-Host "✅ WIC file downloaded"
 
