@@ -1,4 +1,6 @@
-# .NET 6 C# Uno Platform Frame Buffer template specific documentation
+# .NET 6 C# Uno Platform Fra
+
+> ⚠️ **WARNING**: The [Uno Platform VS Code extension]() does not work with the [C# Dev Kit extension](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit). Check the [Uno Platform documentation](https://platform.uno/docs/articles/get-started-vscode.html?tabs=windows%2Candroiddebug#c-dev-kit-compatibility) for more information.
 
 All projects follow the pipeline of tasks described in the [common contributing documentation](https://github.com/toradex/vscode-torizon-templates/blob/bookworm/CONTRIBUTING.md#contributing-templates). However, each project has its own specificities in terms of technologies and methods used to compile, deploy, and debug the code. Therefore, each of them has their own specific tasks in the **tasks.json** file.
 
