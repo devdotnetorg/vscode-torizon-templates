@@ -31,6 +31,9 @@ ARG SSHUSERNAME=
 ##
 ARG GPU=
 
+
+ARG APP_ROOT=
+
 # BUILD ------------------------------------------------------------------------
 ##
 # Deploy Step
@@ -43,6 +46,7 @@ ARG GPU
 ARG SSH_DEBUG_PORT
 ARG APP_EXECUTABLE
 ARG SSHUSERNAME
+ARG APP_ROOT
 ENV APP_EXECUTABLE ${APP_EXECUTABLE}
 
 # SSH for remote debug
@@ -130,5 +134,7 @@ RUN mkdir /var/run/sshd && \
 
 RUN rm -r /etc/ssh/ssh*key && \
     dpkg-reconfigure openssh-server
+
+COPY build-${IMAGE_ARCH}/debug ${APP_ROOT}/app
 
 CMD [ "/usr/sbin/sshd", "-D" ]
