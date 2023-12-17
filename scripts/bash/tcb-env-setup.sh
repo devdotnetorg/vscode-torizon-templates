@@ -6,6 +6,12 @@ shopt -s expand_aliases
 # Check to make sure script is being sourced otherwise exit
 SOURCED=0
 
+# check if we have set the TCB_ENV_PREFERRED_IMAGE
+if [[ -z "${TCB_ENV_PREFERRED_IMAGE}" ]]; then
+    # if not, set it to the latest
+    export TCB_ENV_PREFERRED_IMAGE="torizon/torizoncore-builder"
+fi
+
 # zsh
 if [ -n "$ZSH_EVAL_CONTEXT" ]; then
     case $ZSH_EVAL_CONTEXT in *:file) SOURCED=1;; esac
@@ -71,7 +77,7 @@ tcb_env_setup_usage () {
     echo "  -t <version tag>: select tag mode"
     echo "      With this flag enabled the script will automatically run with no need"
     echo "      for user input. Valid values for <version tag> can be found online:"
-    echo "      https://registry.hub.docker.com/r/torizon/torizoncore-builder/tags?page=1&ordering=last_updated."
+    echo "      https://registry.hub.docker.com/r/$TCB_ENV_PREFERRED_IMAGE/tags?page=1&ordering=last_updated."
     echo "      Whatever <version tag> is provided will then be pulled from online."
     echo "      This flag is mutually exclusive with the -a flag."
     echo ""
@@ -194,7 +200,7 @@ fi
 remote_tags=$(curl -L -s 'https://registry.hub.docker.com/v2/namespaces/torizon/repositories/torizoncore-builder/tags' | sed -n -e 's/\("name"\) *: *\("[^"]\+"\)/\n\1:\2\n/gp' | \
               sed -n -e 's/"name":"\([^"]\+\)"/\1/p')
 # Get list of image tags locally
-local_tags=$(docker images --format "{{.Tag}}" torizon/torizoncore-builder)
+local_tags=$(docker images --format "{{.Tag}}" $TCB_ENV_PREFERRED_IMAGE)
 
 # Determine the tag with the greatest numerical major revision
 get_latest_tag () {
@@ -264,7 +270,7 @@ echo -e "Setting up TorizonCore Builder with version $chosen_tag.\n"
 if [[ $pull_remote == true ]]
 then
     echo -e "Pulling TorizonCore Builder..."
-    if docker pull torizon/torizoncore-builder:"$chosen_tag"; then
+    if docker pull $TCB_ENV_PREFERRED_IMAGE:"$chosen_tag"; then
         echo -e "Done!\n"
     else
         echo "Error: could not pull TorizonCore Builder from Docker Hub!"
@@ -288,7 +294,7 @@ function tcb_dynamic_params() {
 # TODO Not compatible with ZSH
 export -f tcb_dynamic_params
 
-alias torizoncore-builder='docker run --rm -it'"$volumes"'-v "$(pwd)":/workdir -v '"$storage"':/storage -v /var/run/docker.sock:/var/run/docker.sock'"$network"'$(tcb_dynamic_params) '"$*"' torizon/torizoncore-builder:'"$chosen_tag"
+alias torizoncore-builder='docker run --rm -it'"$volumes"'-v "$(pwd)":/workdir -v '"$storage"':/storage -v /var/run/docker.sock:/var/run/docker.sock'"$network"'$(tcb_dynamic_params) '"$*"' '$TCB_ENV_PREFERRED_IMAGE':'"$chosen_tag"
 
 echo "Setup complete! TorizonCore Builder is now ready to use."
 

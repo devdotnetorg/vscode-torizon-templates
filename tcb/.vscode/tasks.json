@@ -208,6 +208,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "VSCODE_CMD": "--help"
                 }
             },
@@ -239,6 +240,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "VSCODE_CMD": "--verbose build"
                 }
             },
@@ -270,6 +272,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "VSCODE_CMD": "--verbose bundle ${command:tcb.listDockerComposeFiles}"
                 }
             },
@@ -300,6 +303,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "VSCODE_CMD": "--verbose bundle ${command:tcb.listDockerComposeFiles} --platform ${input:archList}"
                 }
             },
@@ -330,6 +334,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "VSCODE_CMD": "--verbose bundle ${command:tcb.listDockerComposeFiles} --platform ${input:archList} --dind-param=\"${input:dindParam}\""
                 }
             },
@@ -361,6 +366,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "VSCODE_CMD": "--verbose images --remove-storage unpack ${command:tcb.listFolders}"
                 }
             },
@@ -391,6 +397,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "VSCODE_CMD": "--verbose deploy --remote-host ${config:torizon_ip} --remote-username ${config:torizon_login} --remote-password '${config:torizon_psswd}' --reboot"
                 }
             },
@@ -422,6 +429,7 @@
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
+                    "TCB_ENV_PREFERRED_IMAGE": "${config:tcb.preferredimage}",
                     "DOCKER_PSSWD": "${command:docker_password}",
                     "DOCKER_LOGIN": "${command:docker_login}",
                     "VSCODE_CMD": "--verbose platform push --credentials credentials.zip --package-name __change__ --package-version ${command:tcb.getNextPackageVersion} --login ${env:DOCKER_LOGIN} ${env:DOCKER_PSSWD} __container__"
