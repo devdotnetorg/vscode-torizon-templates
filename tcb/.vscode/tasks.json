@@ -259,7 +259,8 @@
             },
             "dependsOrder": "sequence",
             "dependsOn": [
-            ]
+            ],
+            "group": "build"
         },
         {
             "label": "tcb-bundle",

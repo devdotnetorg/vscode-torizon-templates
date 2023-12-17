@@ -115,6 +115,9 @@ tcb_env_setup_check_updated() {
   local local_md5sum=$(md5sum "$1" | cut -d ' ' -f 1)
   rm tcb-env-setup.sh.tmp
 
+  if [ "$status_code" -eq 200 -a "$remote_md5sum" != "$local_md5sum" ]; then
+    echo -e "WARNING: This script is outdated. To update it, run 'wget -o tcb-env-setup.sh $target_url' \n"
+  fi
 }
 
 # Are we running under Windows?
@@ -191,7 +194,6 @@ fi
 remote_tags=$(curl -L -s 'https://registry.hub.docker.com/v2/namespaces/torizon/repositories/torizoncore-builder/tags' | sed -n -e 's/\("name"\) *: *\("[^"]\+"\)/\n\1:\2\n/gp' | \
               sed -n -e 's/"name":"\([^"]\+\)"/\1/p')
 # Get list of image tags locally
-# TODO RegEx Fails on MacOS. This one works: sed -En 's/^.*torizoncore-builder[[:space:]]+([0-9]+).*$/\1/p'
 local_tags=$(docker images --format "{{.Tag}}" torizon/torizoncore-builder)
 
 # Determine the tag with the greatest numerical major revision
@@ -252,7 +254,7 @@ then
     chosen_tag=$latest_remote
 elif [[ -n $user_tag ]]
 then
-    pull_remote=false
+    pull_remote=true
     chosen_tag=$user_tag
 fi
 
@@ -286,9 +288,19 @@ function tcb_dynamic_params() {
 # TODO Not compatible with ZSH
 export -f tcb_dynamic_params
 
-alias torizoncore-builder='docker run --rm'"$volumes"'-v "$(pwd)":/workdir -v '"$storage"':/storage -v /var/run/docker.sock:/var/run/docker.sock'"$network"'$(tcb_dynamic_params) '"$*"' torizon/torizoncore-builder:'"$chosen_tag"
+alias torizoncore-builder='docker run --rm -it'"$volumes"'-v "$(pwd)":/workdir -v '"$storage"':/storage -v /var/run/docker.sock:/var/run/docker.sock'"$network"'$(tcb_dynamic_params) '"$*"' torizon/torizoncore-builder:'"$chosen_tag"
+
+echo "Setup complete! TorizonCore Builder is now ready to use."
 
 [[ $storage =~ ^[a-zA-Z][a-zA-Z0-9_.-]*$ ]] && storage="Docker volume named '$storage'"
+echo "TorizonCore Builder internal status and image customizations will be stored in $storage."
+
+echo "********************"
+echo "Important: When you run TorizonCore Builder, the tool can only access the files inside the current working directory. Files and directories outside of the current working directory, or links to files and directories outside of the current working directory, won't be visible to TorizonCore Builder. So please make sure that, when running TorizonCore Builder, all files and directories passed as parameters are within the current working directory."
+echo "Your current working directory is: $(pwd)"
+echo "********************"
+echo "For more information, run 'torizoncore-builder -h' or go to https://developer.toradex.com/knowledge-base/torizoncore-builder-tool"
+
 
 tcb_env_setup_cleanup
 unset -f tcb_env_setup_cleanup 2>/dev/null
